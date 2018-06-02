@@ -1,0 +1,80 @@
+
+
+
+<MusicPlayer>:
+    status: status_text
+    play_button: play_button
+    stop_button: stop_button
+    time_bar: time_bar
+    time_text: time_text
+    volume_bar: volume_bar
+    volume_text: volume_text
+    orientation: 'vertical'
+
+    Label:
+        size_hint: 1, 0.9
+        id: status_text
+        text: ''
+        center: root.center
+
+    BoxLayout:
+        size_hint: 1, 0.1
+
+        Label:
+            id: time_text
+            size_hint: 0.1, 1
+            text: '0:00/0:00'
+
+        Slider:
+            id: time_bar
+            size_hint: 0.9, 1
+            max: 100
+            value: 0
+            on_value: root.time_change(self.value)
+
+    BoxLayout:
+        size_hint: 1, 0.1
+
+        Button:
+            id: play_button
+            text: 'Interval'
+            on_release: root.play_or_stop()
+
+        Button:
+            id: stop_button
+            text: 'Stop'
+            on_release: root.stop()
+
+        Label:
+            id: volume_text
+            text: '50'
+        
+        Slider:
+            id: volume_bar
+            max: 100
+            value: 0
+            on_value: root.volume_change(self.value)
+
+        Button:
+            text: 'Choose File'
+            on_release: root.choose()
+
+
+
+<PopupChooseFile>:
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    FileChooserListView:
+        size_hint: 1, 0.9
+        path: root.current_dir
+        on_submit: root.select(self.selection[0])
+
+    BoxLayout:
+        size_hint: 1, 0.1
+
+        Button:
+            text: 'Cancel'
+            on_release: root.cancel()
