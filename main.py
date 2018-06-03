@@ -45,7 +45,7 @@ class MusicPlayer(BoxLayout):
         super(MusicPlayer, self).__init__(**kwargs)
 
         self._file = Window.bind(
-            on_dropfile=self._on_file_drop
+            on_dropfile = self._on_file_drop
         )
 
     def _on_file_drop(self, window, file_path):
@@ -173,14 +173,10 @@ class MusicPlayer(BoxLayout):
         self.sound.stop()
         Clock.unschedule(self._timer)
 
-        if pause:
-            self.is_pausing = True
-        else:
+        if not pause:
             self.is_pausing = False
             self.is_playing = False
             self.pause_pos = 0
-
-        if not pause:
             self.time_bar.value = 0
             
             self.time_text.text = self._time_string(
