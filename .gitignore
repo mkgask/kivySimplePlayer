@@ -1,0 +1,6 @@
+/__pycache__/
+/.vscode/
+/main.build/
+/simpleplayer/__pycache__/
+main.exe
+python36.dll
