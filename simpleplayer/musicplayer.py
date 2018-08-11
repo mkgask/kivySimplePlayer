@@ -58,6 +58,8 @@ class MusicPlayer(BoxLayout):
         self.sound_name = basename(path)
         self.sound.on_stop = self._on_stop
 
+        self.time_bar.max = self.sound.length
+
         try:
             self._volume(50)
             self._start()
@@ -112,7 +114,8 @@ class MusicPlayer(BoxLayout):
         if self.sound.state == "play":
             self._pause()
         elif self.sound.state == 'stop':
-            self._restart()
+            #self._restart()
+            self._start()
 
     def stop(self):
         print('stop')
@@ -123,11 +126,21 @@ class MusicPlayer(BoxLayout):
     def time_change(self, value):
         if not self.sound:
             self.status.text = 'Select music file'
-            return
-
         elif self.is_playing and value != self.value_before + 0.1:
-            self._pause()
-            self._restart(value)
+            #self._pause()
+            #self._restart(value)
+            print(value)
+            self.sound.seek(value)
+        elif not self.is_playing:
+            print('value: ' + str(value))
+            self.pause_pos = value
+            self.time_bar.value = value
+            print('pause_pos save: ' + str(self.pause_pos))
+
+            self.time_text.text = self._time_string(
+                self.time_bar.value,
+                self.lengh
+            )
 
     def volume_change(self, value):
         self._volume(value)
@@ -144,7 +157,7 @@ class MusicPlayer(BoxLayout):
     def _timer(self, val):
         if not self.sound:
             return False
-        elif self.time_bar.value >= self.time_bar.max:
+        elif self.time_bar.max <= self.time_bar.value:
             self._stop()
             return False
         else:
@@ -171,7 +184,13 @@ class MusicPlayer(BoxLayout):
 
     def _start(self):
         print('_start')
+
         self.sound.play()
+
+        if 0 < self.pause_pos:
+            print('pause_pos load: ' + str(self.pause_pos))
+            self.sound.seek(self.pause_pos)
+
         self.is_playing = True
         self.is_manual_stop = False
         Clock.schedule_interval(self._timer, 0.1)
@@ -180,6 +199,7 @@ class MusicPlayer(BoxLayout):
         self.status.text = 'Playing {}'.format(self.sound_name)
 
         self.lengh = self.sound.length
+        self.pause_pos = 0
 
     def _restart(self, pos=None):
         print('_restart')
