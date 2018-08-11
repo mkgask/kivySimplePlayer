@@ -38,16 +38,17 @@
 
         Button:
             id: play_button
-            text: 'Interval'
+            text: '再生'
             on_release: root.play_or_stop()
 
         Button:
             id: stop_button
-            text: 'Stop'
+            text: '停止'
             on_release: root.stop()
 
         Button:
             id: repeat_button
+            text: 'リピートなし'
             on_release: root.repeat_mode_toggle()
 
         Label:
@@ -61,7 +62,7 @@
             on_value: root.volume_change(self.value)
 
         Button:
-            text: 'Choose File'
+            text: 'ファイル選択'
             on_release: root.choose()
 
 

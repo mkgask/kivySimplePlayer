@@ -176,9 +176,7 @@ class MusicPlayer(BoxLayout):
         self.is_manual_stop = False
         Clock.schedule_interval(self._timer, 0.1)
 
-        self.time_bar.max = self.sound.length
-
-        self.play_button.text = 'Interval'
+        self.play_button.text = 'ポーズ'
         self.status.text = 'Playing {}'.format(self.sound_name)
 
         self.lengh = self.sound.length
@@ -204,7 +202,7 @@ class MusicPlayer(BoxLayout):
             self.lengh
         )
 
-        self.play_button.text = 'Play'
+        self.play_button.text = '再生'
         self.status.text = 'Stop {}'.format(self.sound_name)
 
     def _pause(self):
