@@ -19,6 +19,7 @@ class MusicPlayer(BoxLayout):
     popup = None
     is_playing = False
     is_manual_stop = False
+    is_repeating = False
     pause_pos = 0
     value_before = 0
     lengh = 0
@@ -91,6 +92,15 @@ class MusicPlayer(BoxLayout):
         # リピート再生
         print('_on_sound_stop(): Repeat start')
         self._start()
+        return
+
+    def repeat_mode_toggle(self):
+        if self.is_repeating:
+            self.is_repeating = False
+            self.repeat_button.text = 'リピートなし'
+        else:
+            self.is_repeating = True
+            self.repeat_button.text = 'リピート'
         return
 
     def play_or_stop(self):

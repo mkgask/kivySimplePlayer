@@ -5,6 +5,7 @@
     status: status_text
     play_button: play_button
     stop_button: stop_button
+    repeat_button: repeat_button
     time_bar: time_bar
     time_text: time_text
     volume_bar: volume_bar
@@ -44,6 +45,10 @@
             id: stop_button
             text: 'Stop'
             on_release: root.stop()
+
+        Button:
+            id: repeat_button
+            on_release: root.repeat_mode_toggle()
 
         Label:
             id: volume_text
