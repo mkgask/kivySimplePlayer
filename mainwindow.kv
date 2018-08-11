@@ -13,7 +13,7 @@
     orientation: 'vertical'
 
     Label:
-        size_hint: 1, 0.9
+        size_hint: 1, 0.8
         id: status_text
         text: ''
         center: root.center
@@ -28,7 +28,7 @@
 
         Slider:
             id: time_bar
-            size_hint: 0.9, 1
+            size_hint: 0.7, 1
             max: 100
             value: 0
             on_value: root.time_change(self.value)
@@ -38,30 +38,36 @@
 
         Button:
             id: play_button
+            size_hint: 0.1, 1
             text: '再生'
             on_release: root.play_or_stop()
 
         Button:
             id: stop_button
+            size_hint: 0.1, 1
             text: '停止'
             on_release: root.stop()
 
         Button:
             id: repeat_button
+            size_hint: 0.15, 1
             text: 'リピートなし'
             on_release: root.repeat_mode_toggle()
 
         Label:
             id: volume_text
+            size_hint: 0.05, 1
             text: '50'
         
         Slider:
             id: volume_bar
+            size_hint: 0.45, 1
             max: 100
             value: 50
             on_value: root.volume_change(self.value)
 
         Button:
+            size_hint: 0.15, 1
             text: 'ファイル選択'
             on_release: root.choose()
 
