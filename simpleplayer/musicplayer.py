@@ -18,7 +18,7 @@ class MusicPlayer(BoxLayout):
     sound = None
     popup = None
     is_playing = False
-    is_pausing = False
+    is_manual_stop = False
     pause_pos = 0
     value_before = 0
     lengh = 0
@@ -55,6 +55,7 @@ class MusicPlayer(BoxLayout):
         self.sound_path = path
         # self.sound_name = basename(path).encode('utf-8')
         self.sound_name = basename(path)
+        self.sound.on_stop = self._on_stop
 
         try:
             self._volume(50)
@@ -64,6 +65,33 @@ class MusicPlayer(BoxLayout):
         finally:
             if self.popup:
                 self.popup.dismiss()
+
+    def _on_stop(self):
+        print('_on_stop')
+        if 0 < self.pause_pos:
+            self._on_sound_pause()
+        else:
+            self._on_sound_stop()
+        return
+
+    def _on_sound_pause(self):
+        print('_on_sound_pause')
+        return
+
+    def _on_sound_stop(self):
+        print('_on_sound_stop')
+        print('self.is_manual_stop: ' + str(self.is_manual_stop))
+        print('self.is_repeating: ' + str(self.is_repeating))
+
+        if self.is_manual_stop or not self.is_repeating:    # <- 変更
+            # 手動停止またはリピート再生なしの時はリピート再生しない
+            print('_on_sound_stop(): Stop')
+            return
+
+        # リピート再生
+        print('_on_sound_stop(): Repeat start')
+        self._start()
+        return
 
     def play_or_stop(self):
         print('play_or_stop')
@@ -79,6 +107,7 @@ class MusicPlayer(BoxLayout):
     def stop(self):
         print('stop')
         if self.is_playing:
+            self.is_manual_stop = True
             self._stop()
 
     def time_change(self, value):
@@ -134,7 +163,7 @@ class MusicPlayer(BoxLayout):
         print('_start')
         self.sound.play()
         self.is_playing = True
-        self.is_pausing = False
+        self.is_manual_stop = False
         Clock.schedule_interval(self._timer, 0.1)
 
         self.time_bar.max = self.sound.length
@@ -150,28 +179,26 @@ class MusicPlayer(BoxLayout):
         self.sound.seek(pos if pos else self.pause_pos)
         self.pause_pos = 0
 
-    def _stop(self, pause=False):
+    def _stop(self, pause_pos=0):
         print('_stop')
 
         self.sound.stop()
         Clock.unschedule(self._timer)
 
-        if not pause:
-            self.is_pausing = False
-            self.is_playing = False
-            self.pause_pos = 0
-            self.time_bar.value = 0
-            
-            self.time_text.text = self._time_string(
-                self.time_bar.value,
-                self.lengh
-            )
+        self.is_playing = False
+        self.pause_pos = pause_pos
+        self.time_bar.value = pause_pos
+        
+        self.time_text.text = self._time_string(
+            self.time_bar.value,
+            self.lengh
+        )
 
         self.play_button.text = 'Play'
         self.status.text = 'Stop {}'.format(self.sound_name)
 
     def _pause(self):
         print('_pause')
-        self.pause_pos = self.sound.get_pos()
-        self._stop(True)
-        self.is_pausing = True
+        pos = self.sound.get_pos() * 0.999
+        print('pos save: ' + str(pos))
+        self._stop(pause_pos=pos)
